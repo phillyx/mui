@@ -8,10 +8,18 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-		<!--标准mui.css-->
 		<link rel="stylesheet" href="../css/mui.min.css">
-		<!--App自定义的css-->
-		<link rel="stylesheet" type="text/css" href="../css/app.css"/>
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			header.mui-bar{
+				display: none;
+			}
+			.mui-bar-nav~.mui-content{
+				padding: 0;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -32,7 +40,7 @@
 						<label>radio</label>
 						<input name="radio1" type="radio" checked>
 					</div>
-					<div class="mui-input-row mui-radio mui-left mui-disabled">
+					<div class="mui-input-row mui-radio mui-left">
 						<label>disabled radio</label>
 						<input name="radio1" type="radio" disabled="disabled">
 					</div>
@@ -50,44 +58,17 @@
 						<label>radio</label>
 						<input name="radio1" type="radio" checked>
 					</div>
-					<div class="mui-input-row mui-radio mui-disabled">
+					<div class="mui-input-row mui-radio">
 						<label>disabled radio</label>
 						<input name="radio1" type="radio" disabled="disabled">
 					</div>
 				</form>
 			</div>
-			<h5 class="mui-content-padded">列表模式的单选框</h5>
-			<ul class="mui-table-view mui-table-view-radio">
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						Item 1
-					</a>
-				</li>
-				<li class="mui-table-view-cell mui-selected">
-					<a class="mui-navigate-right">
-						Item 2
-					</a>
-				</li>
-				<li class="mui-table-view-cell">
-					<a class="mui-navigate-right">
-						Item 3
-					</a>
-				</li>
-			</ul>
-			<div class="mui-content-padded">
-				<p id="info"></p>
-			</div>
 		</div>
 	</body>
 	<script src="../js/mui.min.js"></script>
+	<script src="../js/app.js"></script>
 	<script>
-		mui.init({
-			swipeBack:true //启用右滑关闭功能
-		});
-		var info = document.getElementById("info");
-		document.querySelector('.mui-table-view.mui-table-view-radio').addEventListener('selected',function(e){
-			info.innerHTML = "当前选中的为："+e.detail.el.innerText;
-		});
-		
+		mui.init();
 	</script>
 </html>

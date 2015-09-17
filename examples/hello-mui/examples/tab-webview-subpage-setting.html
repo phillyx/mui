@@ -65,10 +65,9 @@
 		</style>
 	</body>
 	<script src="../js/mui.min.js"></script>
+	<script src="../js/app.js"></script>
 	<script>
-		mui.init({
-			swipeBack:true //启用右滑关闭功能
-		});
+		mui.init();
 		document.getElementById("about").addEventListener('tap',function () {
 			//获得主页面的webview
 			var main = plus.webview.currentWebview().parent();

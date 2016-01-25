@@ -5,6 +5,11 @@
  * @returns {undefined}
  */
 (function($, name) {
+	//$.removeActionByHookName('gestures','longtap');
+	/**
+	 * @description 添加全局变量以区别longtap 和tap 事件
+	 */
+	$.isLongTapAtived = false;
 	var timer;
 	var handle = function(event, touch) {
 		var session = $.gestures.session;
@@ -14,6 +19,7 @@
 				clearTimeout(timer);
 				timer = setTimeout(function() {
 					$.trigger(session.target, name, touch);
+					//$.isLongTapAtived = true;
 				}, options.holdTimeout);
 				break;
 			case $.EVENT_MOVE:

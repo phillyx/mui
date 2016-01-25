@@ -207,11 +207,17 @@
 			plus.speech.startRecognize({
 				engine: 'iFly'
 			}, function(s) {
-				self.element.value += s;
+				//替换全角符号
+				self.element.value += self.element.value ? '，' : '';
+				//console.log('___s___'+JSON.stringify(s));
+				s.length > 1 && s.pop();
+				self.element.value += s.join('，');
+				self.element.value = self.element.value.replace(/，，/g, '，');
 				$.focus(self.element);
 				plus.speech.stopRecognize();
 				$.trigger(self.element, 'recognized', {
-					value: self.element.value
+					value: self.element.value,
+					oldValue: oldValue
 				});
 				if (oldValue !== self.element.value) {
 					$.trigger(self.element, 'change');

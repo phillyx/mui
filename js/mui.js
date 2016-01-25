@@ -315,6 +315,15 @@ var mui = (function(document, undefined) {
 		$.hooks[type] = hooks;
 		return $.hooks[type];
 	};
+	$.removeActionByHookName = function(type, hookname) {
+		var hooks = $.hooks[type];
+		if (hooks) {
+			for (var i = 0, len = hooks.length; i < len; i++) {
+				if (hooks[i].name == hookname)
+					return hooks.splice(i, 1);
+			}
+		}
+	};
 	$.doAction = function(type, callback) {
 		if ($.isFunction(callback)) { //指定了callback
 			$.each($.hooks[type], callback);

@@ -30,6 +30,7 @@ module.exports = function(grunt) {
 		banner: '/*!\n' +
 			' * =====================================================\n' +
 			' * Mui v<%= pkg.version %> (<%= pkg.homepage %>)\n' +
+			' * Edit by phillyx(github: https://github.com/phillyx/; blog: http://www.cnblogs.com/phillyx;  email: 1020450921@qq.com)\n' +
 			' * =====================================================\n' +
 			' */\n',
 

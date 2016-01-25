@@ -1,6 +1,7 @@
 /*!
  * =====================================================
- * Mui v2.8.0 (http://dev.dcloud.net.cn/mui)
+ * Mui v2.8.1 (http://dev.dcloud.net.cn/mui)
+ * Edit by phillyx(github: https://github.com/phillyx/; blog: http://www.cnblogs.com/phillyx;  email: 1020450921@qq.com)
  * =====================================================
  */
 /**

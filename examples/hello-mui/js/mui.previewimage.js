@@ -1,6 +1,6 @@
 /**
  * @author phillyx
- * @link   http://www.cnblogs.com/phillyx/p/5164231.html
+ * @link  
  */
 (function($, window) {
 

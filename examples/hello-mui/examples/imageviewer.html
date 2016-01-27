@@ -90,6 +90,7 @@
 				height: auto;
 				max-width: 100%;
 				max-height: 100%;
+				object-fit: cover;
 			}
 			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
 				width: 100%;
@@ -161,6 +162,15 @@
 				max-width: 100%;
 				height: auto;
 			}
+			.mui-slider-img-content {
+				position: absolute;
+				bottom: 10px;
+				left: 10px;
+				right: 10px;
+				color: white;
+				text-align: center;
+				line-height: 21px
+			}
 		</style>
 
 	</head>
@@ -176,18 +186,24 @@
 				<p>
 					<img src="../images/yuantiao.jpg" data-preview-src="" data-preview-group="1" />
 				</p>
+			</div>
+			<div class="mui-content-padded">
+			    <p>这个是第二组</p>
+				<p>
+					<img src="../images/yuantiao.jpg" data-preview-src="" data-preview-group="2" data-content="group2_No1"/>
+				</p>
 				<p>图片全屏后，双击或双指缩放均可对图片进行放大、缩小操作，左右滑动可查看同组(data-preview-group相同的图片为一组)其它图片，点击会关闭预览</p>
 				<p>
-					<img src="../images/muwu.jpg" data-preview-src="" data-preview-group="1" />
+					<img src="../images/muwu.jpg" data-preview-src="" data-preview-group="2" />
 				</p>
 				<p>第三张图片，纯粹为了占位： </p>
 				<p>
-					<img src="../images/shuijiao.jpg" data-preview-src="" data-preview-group="1" />
+					<img src="../images/shuijiao.jpg" data-preview-src="" data-preview-group="2"  data-content="group2_No3"/>
 				</p>
 			</div>
 		</div>
 	</body>
-	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.js"></script>
 	<script src="../js/mui.zoom.js"></script>
 	<script src="../js/mui.previewimage.js"></script>
 	<script>

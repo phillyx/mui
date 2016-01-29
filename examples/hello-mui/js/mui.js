@@ -1,6 +1,7 @@
 /*!
  * =====================================================
- * Mui v2.8.0 (http://dev.dcloud.net.cn/mui)
+ * Mui v2.8.1 (http://dev.dcloud.net.cn/mui)
+ * Edit by phillyx(github: https://github.com/phillyx/; blog: http://www.cnblogs.com/phillyx;  email: 1020450921@qq.com)
  * =====================================================
  */
 /**
@@ -319,6 +320,15 @@ var mui = (function(document, undefined) {
 		});
 		$.hooks[type] = hooks;
 		return $.hooks[type];
+	};
+	$.removeActionByHookName = function(type, hookname) {
+		var hooks = $.hooks[type];
+		if (hooks) {
+			for (var i = 0, len = hooks.length; i < len; i++) {
+				if (hooks[i].name == hookname)
+					return hooks.splice(i, 1);
+			}
+		}
 	};
 	$.doAction = function(type, callback) {
 		if ($.isFunction(callback)) { //指定了callback
@@ -1630,8 +1640,53 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  * @returns {undefined}
  */
 (function($, name) {
+	//$.removeActionByHookName('gestures', 'tap');
+
 	var lastTarget;
 	var lastTapTime;
+	/*mui没有提供类似于jq.data('events')获取事件列表的机制
+	*使用getEventListeners,做测试。妈蛋，都只能在控制台使用
+	*添加全局变量isLongTapAtived以区分longtap和tap,然而 mui.gesture.longtap.js以下写法，无论dom有无添加longtap事件，$.isLongTapAtived = false;都执行，这样区分longtap和tap是不行的
+	* 	var handle = function(event, touch) {
+		console.log(event.target);
+		var session = $.gestures.session;
+		var options = this.options;
+		switch (event.type) {
+			case $.EVENT_START:
+				clearTimeout(timer);
+				timer = setTimeout(function() {
+					$.trigger(session.target, name, touch);
+					$.isLongTapAtived = true;
+				}, options.holdTimeout);
+				break;
+			case $.EVENT_MOVE:
+				if (touch.distance > options.holdThreshold) {
+					clearTimeout(timer);
+				}
+				break;
+			case $.EVENT_END:
+			case $.EVENT_CANCEL:
+				clearTimeout(timer);
+				break;
+		}
+	};
+	*解决方案：1目前看来只能重写tap事件并对longtap再新增一个tapOld事件了,tapOld使用框架的代码
+	* 2.$.isLongTapAtived依然添加，只是在每一次dom添加longtap事件时激活
+	* 		document.querySelector("#btn").addEventListener('longtap',function(){
+	* 		    mui.isLongTapAtived=true;
+				console.log('你触发了longtap事件');
+			});
+	*目前使用第二种方案，代码重复量少，结构清晰，没有新增手势。
+	*/
+	var getEvents = function(obj) {
+		console.log(getEventListeners(obj));
+		return typeof(getEventListeners) == "function" && getEventListeners(obj);
+	}
+	var hasEventype = function(obj, e) {
+		var es = getEvents(obj);
+		console.log(es[e]);
+		return es && !!es[e];
+	}
 	var handle = function(event, touch) {
 		var session = $.gestures.session;
 		var options = this.options;
@@ -1644,16 +1699,25 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				if (!target || (target.disabled || (target.classList && target.classList.contains('mui-disabled')))) {
 					return;
 				}
-				if (touch.distance < options.tapMaxDistance && touch.deltaTime < options.tapMaxTime) {
-					if ($.options.gestureConfig.doubletap && lastTarget && (lastTarget === target)) { //same target
-						if (lastTapTime && (touch.timestamp - lastTapTime) < options.tapMaxInterval) {
-							$.trigger(target, 'doubletap', touch);
-							lastTapTime = $.now();
-							lastTarget = target;
-							return;
+				if (touch.distance < options.tapMaxDistance) {
+					if (touch.deltaTime < options.tapMaxTime) {
+						if ($.options.gestureConfig.doubletap && lastTarget && (lastTarget === target)) { //same target
+							if (lastTapTime && (touch.timestamp - lastTapTime) < options.tapMaxInterval) {
+								$.trigger(target, 'doubletap', touch);
+								lastTapTime = $.now();
+								lastTarget = target;
+								return;
+							}
 						}
+						$.trigger(target, name, touch);
+					} else {
+						//如果当前对象添加了长按侦听，略过，否则仍然视为tap事件
+						//if (!hasEventype(target, 'longtap')) {
+						if (!$.isLongTapAtived) {
+							$.trigger(target, name, touch);
+						}
+						$.isLongTapAtived = false;
 					}
-					$.trigger(target, name, touch);
 					lastTapTime = $.now();
 					lastTarget = target;
 				}
@@ -1682,6 +1746,11 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  * @returns {undefined}
  */
 (function($, name) {
+	//$.removeActionByHookName('gestures','longtap');
+	/**
+	 * @description 添加全局变量以区别longtap 和tap 事件
+	 */
+	$.isLongTapAtived = false;
 	var timer;
 	var handle = function(event, touch) {
 		var session = $.gestures.session;
@@ -1691,6 +1760,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				clearTimeout(timer);
 				timer = setTimeout(function() {
 					$.trigger(session.target, name, touch);
+					//$.isLongTapAtived = true;
 				}, options.holdTimeout);
 				break;
 			case $.EVENT_MOVE:
@@ -7326,11 +7396,17 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			plus.speech.startRecognize({
 				engine: 'iFly'
 			}, function(s) {
-				self.element.value += s;
+				//替换全角符号
+				self.element.value += self.element.value ? '，' : '';
+				//console.log('___s___'+JSON.stringify(s));
+				s.length > 1 && s.pop();
+				self.element.value += s.join('，');
+				self.element.value = self.element.value.replace(/，，/g, '，');
 				$.focus(self.element);
 				plus.speech.stopRecognize();
 				$.trigger(self.element, 'recognized', {
-					value: self.element.value
+					value: self.element.value,
+					oldValue: oldValue
 				});
 				if (oldValue !== self.element.value) {
 					$.trigger(self.element, 'change');

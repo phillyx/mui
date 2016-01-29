@@ -5,7 +5,7 @@
 (function($, window) {
 
 	var template = '<div id="{{id}}" class="mui-slider mui-preview-image mui-fullscreen"><div class="mui-preview-header">{{header}}</div><div class="mui-slider-group"></div><div class="mui-preview-footer mui-hidden">{{footer}}</div><div class="mui-preview-loading"><span class="mui-spinner mui-spinner-white"></span></div></div>';
-	var itemTemplate = '<div class="mui-slider-item mui-zoom-wrapper {{className}}"><div class="mui-zoom-scroller"><img src="{{src}}" data-preview-lazyload="{{lazyload}}" style="{{style}}" class="mui-zoom"><div class="mui-slider-img-content">{{content}}</div></div></div>';//新增图片说明
+	var itemTemplate = '<div class="mui-slider-item mui-zoom-wrapper {{className}}"><div class="mui-zoom-scroller"><img src="{{src}}" data-preview-lazyload="{{lazyload}}" style="{{style}}" class="mui-zoom"><div class="mui-slider-img-content">{{content}}</div></div></div>'; //新增图片说明
 	var defaultGroupName = '__DEFAULT';
 	var div = document.createElement('div');
 	var imgId = 0;
@@ -37,6 +37,23 @@
 			this.element.querySelector($.classSelector('.preview-footer')).classList.remove($.className('hidden'));
 		}
 		this.addImages();
+		this.groupsLength=this.getGroupsLength();
+	};
+	/**
+	 *@description 获取当前预览分组长度
+	 */
+	proto.getGroupsLength = function() {
+		var imgs = document.querySelectorAll("img[data-preview-src][data-preview-group]");
+		var tmpGroup;
+		var len = 0;
+		$.each(imgs, function(index, item) {
+			var grp = item.getAttribute('data-preview-group');
+			if (!tmpGroup || tmpGroup != grp) {
+				tmpGroup = grp;
+				len += 1;
+			}
+		});
+		return len || 1;
 	};
 	proto.initEvent = function() {
 		var self = this;
@@ -377,7 +394,7 @@
 		for (var i = 0, len = zoomers.length; i < len; i++) {
 			$(zoomers[i]).zoom().destory();
 		}
-		//		$(this.element).slider().destory();
+		this.groupsLength > 1 && $(this.element).slider().destroy();
 		//		this.empty();
 	};
 	proto.isShown = function() {

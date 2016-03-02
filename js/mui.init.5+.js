@@ -385,7 +385,8 @@
 		var webview;
 		if (!$.webviews[id]) { //保证执行一遍
 			//TODO 这里也有隐患，比如某个webview不是作为subpage创建的，而是作为target webview的话；
-			webview = plus.webview.create(options.url, id, options.styles, options.extras);
+			//2016-03-02 1020450921@qq.com 做测试时防止重复加载，会有一定隐患
+			webview = plus.webview.getWebviewById(id) || plus.webview.create(options.url, id, options.styles, options.extras);
 			//之前的实现方案：子窗口loaded之后再append到父窗口中；
 			//问题：部分子窗口loaded事件发生较晚，此时执行父窗口的children方法会返回空，导致父子通讯失败；
 			//     比如父页面执行完preload事件后，需触发子页面的preload事件，此时未append的话，就无法触发；

@@ -6,3 +6,4 @@ sass/.csslintrc
 
 js/.jscsrc
 js/.jshintrc
+*.zip
